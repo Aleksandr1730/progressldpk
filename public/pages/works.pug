@@ -1,0 +1,94 @@
+extends ../_template
+block variables
+  - var title = 'Наши работы'
+include ../common/mixins.pug
+block content
+ - var author = 'Наши работы'
+ - var site = ''
+ include ../common/heder.pug
+ .works
+  .works__zag
+   h1 Наша продукция
+  .sl
+   each val in items
+    .sl__slide
+     .sl__img
+      img.sl__img&attributes({'src': val.pictures[0], 'alt': val.name})
+     .sl__text
+      h2= val.name
+      .detal 
+       p.brend= "Бренд: " + val.brand
+       p.tip= "Тип: " + val.type
+       p.shen= "Цена от: " + val.price + " руб./шт."
+      a(href="shop.html") 
+       i.fa.fa-link
+       span Перейти в магазин
+ .work__about
+  .blur__background
+   img(src="assets/img/water.jpg" alt="").blur__img
+   h1 Что о нас говорят
+   .comment
+    .comment__blok
+     i.fa.fa-quote-left
+     p. 
+      Этот парень проходил обучение веб-разработке не где-то, а в LoftSchool! 2 месяца только самых тяжелых испытаний и бессонных ночей!
+     .comment__author
+      .avatar
+       img(src="assets/img/avatar.png" alt="avatar")
+      .comment__author-name Зар Захаров
+      .comment__author-post преподаватель
+    .comment__blok.comment__blok-even
+     i.fa.fa-quote-left
+     p. 
+      Этот код выдержет любые испытания. Только пожалуйста, не загружается сайт на слишком старых браузерах!
+     .comment__author
+      .avatar
+       img(src="assets/img/avatar.png" alt="avatar")
+      .comment__author-name Ковальчук Дмитрий
+      .comment__author-post основатель Loftschool
+   a(href="")
+    svg.arrow_up
+     use(xlink:href="#portf_arrow_up")
+  .blur__form-wrapper
+   .blur__form
+   .blur__form-content
+    h2 Связаться с нами
+    form(name="authrization" action="#" method="post")
+     input(id="nam" class="auth" type="text" class="login" placeholder="Имя")
+     input(id="email" class="auth" type="email" class="email" placeholder="Email")
+     textarea(rows="4" cols="20" id="text" name="text" class="textarea" placeholder="Ваше сообщение")
+     input(value="Отправить" name="submit" id="submit" class="submit" type="button")
+     input(type="reset" value="Очистить" class="reset")
+ include ../common/footer.pug
+  script.
+   submit.addEventListener('click', function() {
+    var data = {
+     name: nam.value,
+     email: email.value,
+     text: text.value
+    };
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/mail');
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=utf8');
+    xhr.send(JSON.stringify(data));
+    xhr.onreadystatechange = function() {
+     if (xhr.readyState != 4) return;
+     if (xhr.status != 200) {
+      alert( xhr.status + ': ' + xhr.statusText );
+     } else {
+      try {
+       var otv = JSON.parse(xhr.responseText);
+      } catch (e) {
+       alert( "Некорректный ответ " + e.message );
+      }
+      fotv(otv);
+     }
+    }
+    function fotv(otv) {
+     if (!otv.error) {
+      alert("Сообщение отправлено");
+     } else {
+      alert("Сообщение не отправлено: " + otv.error);
+     }
+    };
+   });

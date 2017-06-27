@@ -1,0 +1,96 @@
+extends ../_template
+block variables
+  - var title = 'Оформление заказа'
+include ../common/mixins.pug
+block content
+ - var author = 'Оформление заказа'
+ - var site = ''
+ include ../common/heder.pug
+ .ordering
+  iframe(name="myIFR" style="display: none")
+  form(id="data" action="/shops/ordering" method="POST" enctype="multipart/form-data" target="myIFR")
+   .ordering-row.ordering-row-info
+    p Информация о покупателе
+    input(type="text" placeholder="Ф.И.О." name="fio" required)
+    input(type="text" placeholder="E-Mail" name="email" required)
+    input(type="tel" placeholder="Телефон" name="tel" required)
+    input(type="text" placeholder="Адрес доставки" name="address" required)
+   .ordering-row.ordering-row-products
+    p Товары в заказе
+    table
+     thead
+      tr.caption
+       th(colspan="2") Название товара
+       th Цена
+       th Количество
+       th Итого
+     tbody
+       tr(id="1").data
+        td.id(style="display: none;")
+         input(type="text" name="id" style="display: none;" required)
+        td.img
+         img(width="150px" src="upload\\5936b76fe49d291764aa73ce_0.png")
+         input(type="text" name="img" style="display: none;" required)
+        td.title
+         p.title Штукатурка Юнис Теплон белый 15 кг
+         input(type="text" name="title" style="display: none;" required)
+         p.id Код товара: 10110 
+        td.price
+         span.price 265
+         input(type="text" name="price" style="display: none;" required)
+         span.currency  руб.
+        td.quantity
+         span.quantity 1
+         input(type="text" name="quantity" style="display: none;" required)
+        td.total
+         span.total 265
+         input(type="text" name="total" style="display: none;" required)
+         span.currency  руб.
+   .ordering-row
+    p Дополнительная информация
+    textarea(name="textarea" rows="6" placeholder="Комментарий к заказу")
+   .ordering-row.ordering-row-saveButton
+    input(type="submit" id="saveButton" value="Оформить заказ")
+ include ../common/footer.pug
+ script(defer).
+  var returnDataArray = JSON.parse(localStorage.getItem("product"));
+  var data = $("tr.data");
+  for (var i = 1; i < returnDataArray.length; i++) $(data[0]).clone().appendTo("tbody");
+  var data = $("tr.data");
+  var quantity = 0;
+  var price = 0;
+  for (var i = 0; i < returnDataArray.length; i++) {
+   $(data[i]).attr("id", returnDataArray[i].id);
+   $(data[i]).find("td.img img").attr("src", returnDataArray[i].img);
+   $(data[i]).find("td.title p.title").text(returnDataArray[i].title);
+   $(data[i]).find("td.title p.id").text("Код товара: " + returnDataArray[i].id);
+   $(data[i]).find("td.price span.price").text(returnDataArray[i].price);
+   $(data[i]).find("td.quantity span.quantity").text(returnDataArray[i].quantity);
+   quantity = Number(returnDataArray[i].quantity);
+   price = Number(returnDataArray[i].price.replace(/\D+/g,""));
+   $(data[i]).find("td.total span.total").text(quantity * price);
+   $(data[i]).find("td.total input").val(quantity * price);
+   $(data[i]).find("td.quantity input").val(returnDataArray[i].quantity);
+   $(data[i]).find("td.price input").val(returnDataArray[i].price);
+   $(data[i]).find("td.title input").val(returnDataArray[i].title);
+   $(data[i]).find("td.img input").val(returnDataArray[i].img);
+   $(data[i]).find("td.id input").val(returnDataArray[i].id);
+  }
+  if (!returnDataArray.length) {
+   window.location.href = "shop";
+  };
+  $(".ordering-row-saveButton input").click(function () {
+   var p = 0;
+   $(".ordering-row-info input").each(function(){
+    if( $.trim($(this).val()) == "" ) p = 1;
+   });
+   if (p == 0) {
+    delete localStorage["product"];
+    var dataArray = [];
+    var serialDataArray = JSON.stringify(dataArray);
+    localStorage.setItem('product', serialDataArray);
+    setTimeout(function(){
+     window.location.href = "shop";
+    }, 500);
+   }
+  });

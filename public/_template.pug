@@ -1,0 +1,34 @@
+block variables
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    title #{title}
+    meta(content="Shmelkov Aleksandr" name="author")
+    meta(content="" name="description")
+    meta(content="" name="keywords")
+    meta(content="width=device-width, initial-scale=1" name="viewport")
+    meta(content="ie=edge" http-equiv="x-ua-compatible")
+    meta(http-equiv="Cache-Control" content="public")
+    //- favicon block start
+    link(rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png")
+    link(rel="icon" type="image/png" href="assets/img/favicons/favicon-32x32.png" sizes="32x32")
+    link(rel="icon" type="image/png" href="assets/img/favicons/favicon-16x16.png" sizes="16x16")
+    link(rel="manifest" href="assets/img/favicons/manifest.json")
+    link(rel="mask-icon" href="assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5")
+    meta(name="msapplication-TileColor" content="#00aba9")
+    meta(name="msapplication-TileImage" content="assets/img/favicons/mstile-144x144.png")
+    meta(name="theme-color" content="#ffffff")
+    //- favicon block end
+    link(rel='stylesheet' href='assets/css/foundation.css')
+    link(rel='stylesheet' href='assets/css/app.css')
+    script(src='assets/js/foundation.js')
+    script(src='assets/js/app.js' defer)
+    block maps
+    <!--[if lt IE 9]>script(src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js")<![endif]-->
+  body
+    .loader
+     span 0%
+     .loader-bar
+    .wrap#wrap
+     block content

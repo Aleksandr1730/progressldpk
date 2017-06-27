@@ -1,0 +1,510 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    title Панель администратора
+    meta(content="Shmelkov Aleksandr" name="author")
+    meta(content="" name="description")
+    meta(content="" name="keywords")
+    meta(content="width=device-width, initial-scale=1" name="viewport")
+    meta(content="ie=edge" http-equiv="x-ua-compatible")
+
+    //- favicon block start
+    link(rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png")
+    link(rel="icon" type="image/png" href="assets/img/favicons/favicon-32x32.png" sizes="32x32")
+    link(rel="icon" type="image/png" href="assets/img/favicons/favicon-16x16.png" sizes="16x16")
+    link(rel="manifest" href="assets/img/favicons/manifest.json")
+    link(rel="mask-icon" href="assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5")
+    meta(name="msapplication-TileColor" content="#00aba9")
+    meta(name="msapplication-TileImage" content="assets/img/favicons/mstile-144x144.png")
+    meta(name="theme-color" content="#ffffff")
+    //- favicon block end
+
+    link(rel='stylesheet' href='assets/css/foundation.css')
+    link(rel='stylesheet' href='assets/css/app.css')
+    script(src='assets/js/foundation.js')
+    script(src='assets/js/app.js' defer)
+  body(style="position: relative; display: flex;")
+   .bac
+   .wpapper
+    header
+     span Панель администрирования
+     a(href="/") Вернуться на сайт
+    .tabs
+     iframe(name="myIFR" style="display: none")
+     ul.tab.tabs__caption
+      li.active Блог
+      li Работы
+      li Магазин (разделы)
+      li Магазин (товары)
+      li Оформленные заказы
+     .blok.tabs__content.active
+      .blok-left
+       p.zag Страница «Блог»
+       p.kom Добавление записи:
+       form(action="#")
+        input(id="postTitle" type="text" placeholder="Заголовок")
+        input(id="postData" type="text" placeholder="Дата")
+        textarea(id="postText" placeholder="Содержание")
+        button(type="button" id="saveButton") Добавить
+      .blok-right
+       form(name="blog" method="POST" enctype="multipart/form-data" target="myIFR").form-blog
+        table.table-blog
+         thead
+          tr.caption
+           th ID
+           th Заголовок
+           th Дата
+           th Содержание
+           th(colspan="2") Управление
+         tbody
+          - for (var i = 0; i < blog.length; i++)
+           tr.data
+             td.id
+              input(type="text" name="id" value=blog[i]._id autocomplete="off" readonly required)
+             td.title
+              textarea(rows="4" name="title" required)= blog[i].title
+             td.date
+              textarea(name="date" required)= blog[i].date
+             td.contents
+              button.contents-blog(tabindex="1" type="button") Показать
+              textarea(tabindex="2" name="contents" required)= blog[i].body
+             td.change
+              button(type="button" formaction="/adminBlog/change").change-blog Изменить
+             td.delete
+              button(type="button" formaction="/adminBlog/delete").delete-blog Удалить
+     .blok.tabs__content
+      .blok-left
+       p.zag Страница «Наши работы»
+       p.kom Добавить работу:
+       iframe(name="myIFR" style="display: none")
+       form(action="/admin/works" method="POST" enctype="multipart/form-data" target="myIFR")
+        input(id="workName" name="workName" type="text" placeholder="Название товара")
+        input(id="workBrand" name="workBrand" type="text" placeholder="Бренд")
+        input(id="workType" name="workType" type="text" placeholder="Тип")
+        input(id="workPrice" name="workPrice" type="text" placeholder="Цена")
+        //input(id="workLink" name="workLink" type="text" placeholder="Ссылка")
+        input(type="file" id="workPicture" name="workPicture" accept="image/*,image/jpeg,image/png" value="Загрузить картинку")
+        input(type="submit" id="saveButtont" value="Добавить")
+      .blok-right
+       form(name="works" method="POST" enctype="multipart/form-data" target="myIFR").form-works
+        table.table-works
+         thead
+          tr.caption
+           th ID
+           th Заголовок
+           th Бренд
+           th Тип
+           th Цена
+           th(colspan="2") Управление
+         tbody
+          - for (var i = 0; i < works.length; i++)
+           tr.data
+             td.id
+              input(type="text" name="id" value=works[i]._id autocomplete="off" readonly required)
+             td.title
+              textarea(rows="4" name="title" required)= works[i].name
+             td.brand
+              textarea(name="brand" required)= works[i].brand
+             td.type
+              textarea(name="type" required)= works[i].type
+             td.price
+              textarea(name="price" required)= works[i].price
+             td.change
+              button(type="button" formaction="/adminWorks/change").change-works Изменить
+             td.delete
+              button(type="button" formaction="/adminWorks/delete").delete-works Удалить
+     .blok.tabs__content
+      .blok-left
+       p.zag Страница «Магазин»
+       p.kom Добавить раздел:
+       iframe(name="myIFR" style="display: none")
+       form(action="/shop/section" method="POST" enctype="multipart/form-data" target="myIFR")
+        input(id="sectionName" name="sectionName" type="text" placeholder="Название раздела")
+        input(id="sectionCategory" name="sectionCategory" type="text" placeholder="Название категории")
+        p Добавить дополнительные данные:
+        div(id="parentId")
+         div
+          input(name="name" id="id_1" type="text") 
+          a(onclick="return deleteField(this)" href="#").del-field   [X]
+        a(onclick="return addField()" href="#").add-field Добавить поле
+        input(type="file" id="sectionPicture" name="sectionPicture" accept="image/*,image/jpeg,image/png" value="Загрузить картинку")
+        input(type="submit" id="saveButton2" value="Добавить")
+      .blok-right
+       form(name="section" method="POST" enctype="multipart/form-data" target="myIFR").form-section
+        table.table-section
+         thead
+          tr.caption
+           th ID
+           th Раздел
+           th Категория
+           th Доп. данные
+           th(colspan="2") Управление
+         tbody
+          - for (var i = 0; i < sectionn.length; i++)
+           tr.data
+             td.id
+              input(type="text" name="id" value=sectionn[i]._id autocomplete="off" readonly required)
+             td.name
+              textarea(rows="4" name="name" required)= sectionn[i].name
+             td.category
+              textarea(name="category" required)= sectionn[i].category
+             td.data
+              - for (var j = 0; j < sectionn[i].data.length; j++)
+               textarea(name="data" required)= sectionn[i].data[j]
+             td.change
+              button(type="button" formaction="/adminWorks/change").change-section Изменить
+             td.delete
+              button(type="button" formaction="/adminWorks/delete").delete-section Удалить
+     .blok.tabs__content
+      .blok-left
+       p.zag Страница «Магазин»
+       p.kom Добавить товар:
+       iframe(name="myIFR" style="display: none")
+       form(action="/shops/product" method="POST" enctype="multipart/form-data" target="myIFR")
+        select(name="select" id="select" required)
+         - for (var i = 0; i < section.length; i++)
+          optgroup&attributes({'label': section[i][0][0]})
+           - for (var j = 0; j < section[i][1].length; j++)
+            option&attributes({'value': section[i][1][j], 'onclick': "clik()"})= section[i][1][j]
+        input(id="productName" name="productName" type="text" placeholder="Название товара" required)
+        input(id="productPrice" name="productPrice" type="text" placeholder="Цена" required)
+        p Добавить дополнительные данные:
+        - for (var i = 0; i < section.length; i++)
+         .section-select&attributes({'name': section[i][0][0]})
+          - for (var j = 0; j < section[i][3].length; j++)
+           ul.data&attributes({'name': section[i][1][j], 'style': "display:none;"})
+            - for (var k = 0; k < section[i][3][j].length; k++)
+             li.data-item
+              label= section[i][3][j][k]
+              input(type="text" class="data-item-input-none")&attributes({'id': "dataTextPos", 'name': "dataTextPos", 'value': section[i][3][j][k], 'style': "display:none;"})
+              input(type="text" class="data-item-input")&attributes({'id': "dataText", 'name': "dataText", 'placeholder': section[i][3][j][k]})
+        input(type="file" id="productPicture" name="productPicture" accept="image/*,image/jpeg,image/png" value="Загрузить картинку")
+        input(type="submit" id="saveButton3" value="Добавить")
+      .blok-right
+       form(name="product" method="POST" enctype="multipart/form-data" target="myIFR").form-product
+        table.table-productt
+         thead
+          tr.caption
+           th ID
+           th Категория
+           th Заголовок
+           th Цена
+           th Доп. данные
+           th Значения данных
+           th(colspan="2") Управление
+         tbody
+          - for (var i = 0; i < product.length; i++)
+           tr.data
+             td.id
+              input(type="text" name="id" value=product[i]._id autocomplete="off" readonly required)
+             td.category
+              textarea(name="category" required)= product[i].category
+             td.name
+              textarea(rows="4" name="name" required)= product[i].name
+             td.price
+              textarea(name="price" required)= product[i].price
+             td.dataPos
+              - for (var j = 0; j < product[i].dataPos.length; j++)
+               textarea(name="dataPos" readonly required)= product[i].dataPos[j]
+             td.data
+              - for (var j = 0; j < product[i].data.length; j++)
+               textarea(name="data" required)= product[i].data[j]
+             td.change
+              button(type="button" formaction="/adminWorks/change").change-product Изменить
+             td.delete
+              button(type="button" formaction="/adminWorks/delete").delete-product Удалить
+     .blok.tabs__content.blok_ordering
+      p.zag Страница «Оформление заказа»
+      iframe(name="myIFR" style="display: none")
+      form(action="/shops/ffffff" name="ordering" method="POST" enctype="multipart/form-data" target="myIFR").form-ordering
+       .archive
+        span Архив: 
+        ul.tabs__caption2
+         li.active2 Не сортировано
+         li Готово
+         li Отложено
+         mixin table(ordering, ready, defer)
+          .ordering
+           .buyer
+            table.table-buyer
+             thead
+              tr.caption
+               th ID
+               th Ф.И.О.
+               th E-Mail
+               th Телефон
+               th Адрес доставки
+             tbody
+              tr(id="1").data
+               td(style="display:none;")
+                input(type="text" name="id" value=ordering[i]._id)
+               td= ordering[i]._id
+               td= ordering[i].fio
+               td= ordering[i].email
+               td= ordering[i].tel
+               td= ordering[i].address
+           .product
+            table.table-product
+             thead
+              tr.caption
+               th(colspan="2") Название товара
+               th Цена
+               th Количество
+               th Итого
+             tbody
+              - for (var j = 0; j < ordering[i].id.length; j++)
+               tr.data&attributes({'id': ordering[i].id[j]})
+                td.img
+                 img(width="150px")&attributes({'src': ordering[i].img[j]})
+                td.title
+                 p.title= ordering[i].title[j]
+                 p.id= "Код товара: " + ordering[i].id[j]
+                td.price
+                 span.price= ordering[i].price[j]
+                 span.currency  руб.
+                td.quantity
+                 span.quantity= ordering[i].quantity[j]
+                td.total
+                 span.total= ordering[i].total[j]
+                 span.currency  руб.
+             tfoot
+              tr.control
+               td(colspan="2").totalControl 
+                span Итого: 
+                span.active 2732
+                span  руб.
+               td.message
+                //button(type="button").message-button Отправить сообщение
+               td.defer
+                if !defer
+                 if !ready
+                  button(type="button" onclick="defer(this)").defer-button Отложить
+               td.ready
+                if !ready
+                 button(type="button" onclick="ready(this)").ready-button Готово
+       .tabs__content2.active2
+        - for (var i = 0; i < unsorted.length; i++)
+         +table(unsorted, false, false)
+       .tabs__content2
+        - for (var i = 0; i < ready.length; i++)
+         +table(ready, true, false)
+       .tabs__content2
+        - for (var i = 0; i < defer.length; i++)
+         +table(defer, false, true)
+    script.
+     saveButton.addEventListener('click', function() {
+         var data = {
+            title: postTitle.value,
+            date: postData.value,
+            text: postText.value
+         };
+         var xhr = new XMLHttpRequest();
+         xhr.open('POST', '/admin/blog');
+         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf8');
+         xhr.send(JSON.stringify(data));
+     });
+    script.
+     var countOfFields = 1;
+     var curFieldNameId = 1;
+     var maxFieldLimit = 10;
+     function deleteField(a) {
+      var contDiv = a.parentNode;
+      contDiv.parentNode.removeChild(contDiv);
+      countOfFields--;
+      return false;
+     }
+     function addField() {
+      if (countOfFields >= maxFieldLimit) {
+       alert("Число полей достигло своего максимума = " + maxFieldLimit);
+       return false;
+      }
+      countOfFields++;
+      curFieldNameId++;
+      var div = document.createElement("div");
+      div.innerHTML = "<input name=\"name" + "\" id=\"id_" + curFieldNameId + "\" type=\"text\" /> <a onclick=\"return deleteField(this)\" href=\"#\">[X]</a>";
+      document.getElementById("parentId").appendChild(div);
+      return false;
+     }
+    script(defer).
+     $('ul.tabs__caption2').on('click', 'li:not(.active2)', function () {
+      $(this)
+       .addClass('active2').siblings().removeClass('active2')
+       .closest('.blok.tabs__content.blok_ordering').find('div.tabs__content2').removeClass('active2').eq($(this).index()).addClass('active2');
+     });
+     var wh = $(".wpapper").height();
+     var hh = $("html").height();
+     clik();
+     function clik() {
+      var objSel = document.getElementById("select"); 
+      if ( objSel.selectedIndex != -1) {
+       var a = $("ul.data");
+       var b = objSel.options[objSel.selectedIndex].value;
+       for (var i = 0; i < a.length; i++) {
+        if ($(a[i]).attr("name") == b) {
+         $(a).css("display", "none");
+         $(a[i]).css("display", "block");
+         $(a[i]).removeAttr("required");
+         $(a[i]).attr("required", '');
+         $("input.data-item-input-none").attr("id", '');
+         $("input.data-item-input-none").attr("name", '');
+         var c = $("input.data-item-input");
+         var d = $(a[i]).children();
+         for (var j = 0; j < c.length; j++) {
+          $(c[j]).val('');
+         }
+         for (var k = 0; k < d.length; k++) {
+          $(d[k]).children("input.data-item-input-none").attr({
+           'id': 'dataTextPos',
+           'name': 'dataTextPos'
+          });
+         }
+        }
+       }
+      }
+     }
+     $("td.delete button.delete-button").click(function () {
+      $(this).closest("tr.data").detach();
+     });
+     $("tr.control td.order button.order-button").click(function () {
+      $(this).closest(".ordering").detach();
+     });
+     var ordering = $(".ordering");
+     for (var i = 0; i < ordering.length; i++) {
+      var totalPrice = $(ordering[i]).find($("tr.data td.total span.total")).map(function(){
+       return Number($(this).text().replace(/\D+/g,""));
+      }).get();
+      var totalControl = 0;
+      for (var j = 0; j < totalPrice.length; j++) totalControl += totalPrice[j];
+      $(ordering[i]).find($("tr.control td.totalControl span.active")).text(totalControl);
+     };
+     $("table.table-blog button.change-blog").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-blog").attr("action", "/adminBlog/change");
+       $("table.table-blog input, table.table-blog textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-blog tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-blog tr.data").find("td.title textarea").attr("name", "title");
+       thiss.parents("table.table-blog tr.data").find("td.date textarea").attr("name", "date");
+       thiss.parents("table.table-blog tr.data").find("td.contents textarea").attr("name", "contents");
+       blog.submit();
+      };
+     });
+     $("table.table-blog button.delete-blog").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-blog").attr("action", "/adminBlog/delete");
+       $("table.table-blog input, table.table-blog textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-blog tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-blog tr.data").find("td.title textarea").attr("name", "title");
+       thiss.parents("table.table-blog tr.data").find("td.date textarea").attr("name", "date");
+       thiss.parents("table.table-blog tr.data").find("td.contents textarea").attr("name", "contents");
+       blog.submit();
+       thiss.parents("table.table-blog tr.data").detach();
+      };
+     });
+     function ready(t) {
+      if (confirm('Вы уверены?')) {
+       $(".form-ordering").attr("action", "/adminOrdering/ready");
+       $("table.table-buyer tr.data td input").removeAttr("name");
+       var thiss = $(t);
+       var thissordering = thiss.parents(".ordering");
+       thissordering.find(".buyer table.table-buyer tr.data td input").attr("name", "id");
+       thiss.parents("tr.control").find("button").detach();
+       thissordering.clone().appendTo($("form.form-ordering .tabs__content2").eq(1));
+       thissordering.detach();
+       $("form.form-ordering").submit();
+      };
+     };
+     function defer(t) {
+      if (confirm('Вы уверены?')) {
+       $(".form-ordering").attr("action", "/adminOrdering/defer");
+       $("table.table-buyer tr.data td input").removeAttr("name");
+       var thiss = $(t);
+       var thissordering = thiss.parents(".ordering");
+       thissordering.find(".buyer table.table-buyer tr.data td input").attr("name", "id");
+       thiss.detach();
+       thissordering.clone().appendTo($("form.form-ordering .tabs__content2").eq(2));
+       thissordering.detach();
+       $("form.form-ordering").submit();
+      };
+     };
+     $("table.table-works button.change-works").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-works").attr("action", "/adminWorks/change");
+       $("table.table-works input, table.table-works textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-works tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-works tr.data").find("td.title textarea").attr("name", "title");
+       thiss.parents("table.table-works tr.data").find("td.brand textarea").attr("name", "brand");
+       thiss.parents("table.table-works tr.data").find("td.type textarea").attr("name", "type");
+       thiss.parents("table.table-works tr.data").find("td.price textarea").attr("name", "price");
+       works.submit();
+      };
+     });
+     $("table.table-works button.delete-works").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-works").attr("action", "/adminWorks/delete");
+       $("table.table-works input, table.table-works textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-works tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-works tr.data").find("td.title textarea").attr("name", "title");
+       thiss.parents("table.table-works tr.data").find("td.brand textarea").attr("name", "brand");
+       thiss.parents("table.table-works tr.data").find("td.type textarea").attr("name", "type");
+       thiss.parents("table.table-works tr.data").find("td.price textarea").attr("name", "price");
+       works.submit();
+       thiss.parents("table.table-works tr.data").detach();
+      };
+     });
+     $("table.table-section button.change-section").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-section").attr("action", "/adminSection/change");
+       $("table.table-section input, table.table-section textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-section tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-section tr.data").find("td.name textarea").attr("name", "name");
+       thiss.parents("table.table-section tr.data").find("td.category textarea").attr("name", "category");
+       thiss.parents("table.table-section tr.data").find("td.data textarea").attr("name", "data");
+       section.submit();
+      };
+     });
+     $("table.table-section button.delete-section").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-section").attr("action", "/adminSection/delete");
+       $("table.table-section input, table.table-section textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-section tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-section tr.data").find("td.name textarea").attr("name", "name");
+       thiss.parents("table.table-section tr.data").find("td.category textarea").attr("name", "category");
+       thiss.parents("table.table-section tr.data").find("td.data textarea").attr("name", "data");
+       section.submit();
+       thiss.parents("table.table-section tr.data").detach();
+      };
+     });
+     $("table.table-productt button.change-product").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-product").attr("action", "/adminProduct/change");
+       $("table.table-productt input, table.table-productt textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-productt tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-productt tr.data").find("td.category textarea").attr("name", "category");
+       thiss.parents("table.table-productt tr.data").find("td.name textarea").attr("name", "name");
+       thiss.parents("table.table-productt tr.data").find("td.price textarea").attr("name", "price");
+       thiss.parents("table.table-productt tr.data").find("td.data textarea").attr("name", "data");
+       product.submit();
+      };
+     });
+     $("table.table-productt button.delete-product").click(function () {
+      if (confirm('Вы уверены?')) {
+       $(".form-product").attr("action", "/adminProduct/delete");
+       $("table.table-productt input, table.table-productt textarea").removeAttr("name");
+       var thiss = $(this);
+       thiss.parents("table.table-productt tr.data").find("td.id input").attr("name", "id");
+       thiss.parents("table.table-productt tr.data").find("td.category textarea").attr("name", "category");
+       thiss.parents("table.table-productt tr.data").find("td.name textarea").attr("name", "name");
+       thiss.parents("table.table-productt tr.data").find("td.price textarea").attr("name", "price");
+       thiss.parents("table.table-productt tr.data").find("td.data textarea").attr("name", "data");
+       product.submit();
+       thiss.parents("table.table-productt tr.data").detach();
+      };
+     });

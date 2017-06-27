@@ -1,0 +1,37 @@
+extends ../_template
+block variables
+  - var title = 'Блог'
+include ../common/mixins.pug
+block content
+ - var author = 'Блог'
+ - var site = 'Новости компании'
+ include ../common/heder.pug
+ .blog
+  .blog__left
+   ul
+    - var i = 0
+    each val in items
+     li
+      - i = i + 1
+      a&attributes({'href': "#p" + i})= val.title
+  .blog__right
+   - var i = 0
+   each val in items
+    - i = i + 1
+    .blog__right-article&attributes({'id': "p" + i})
+     h2= val.title
+     .data= val.date
+     p= val.body
+   input(type="text" style="display:none;" value=queryPage).pagination-queryPage
+   ul.pagination
+    - for (var i = 1; i < page + 1; i++)
+     li.pagination-item 
+      if queryCategory
+       a(href="?section=" + querySection + "&category=" + queryCategory + "&page=" + i)= i
+      else
+       a(href="?page=" + i)= i
+ include ../common/footer.pug
+ script(defer).
+  var queryPage = Number($("input.pagination-queryPage").val().replace(/\D+/g,""));
+  $("ul.pagination li.pagination-item").eq(queryPage - 1).find("a").addClass("pagination-active").removeAttr("href");
+  console.log(queryPage);

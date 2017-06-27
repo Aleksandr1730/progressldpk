@@ -1,0 +1,134 @@
+extends ../_template
+block variables
+  - var title = 'Магазин'
+include ../common/mixins.pug
+block content
+ - var author = 'Магазин'
+ - var site = 'Товары которые мы продаём'
+ include ../common/heder.pug
+ .shop
+  .shop__left
+   .shop__left-menu
+    ul.section.accordion
+     - for (var i = 0; i < section.length; i++)
+      li.section-item.accordion_item
+       p.title_block= section[i][0]
+       ul.category.info
+        - for (var j = 0; j < section[i][1].length; j++)
+         li.category-item
+          a&attributes({'href': section[i][2][j]})= section[i][1][j]
+  .shop__right
+   ul.products
+    - for (var i = 0; i < product.length; i++)
+     li&attributes({'id': product[i]._id}).products-item
+      .product__top
+       img&attributes({'src': product[i].pictures[0], 'alt': product[i].name}).product-img
+      .product__bottom
+       p.title= product[i].name
+       .data
+        - for (var j = 0; j < product[i].data.length; j++)
+         span.data= product[i].dataPos[j]
+         p.data-item=  product[i].data[j]
+       .price
+        span Цена: от 
+        span.price-active= product[i].price
+        span  руб./шт.
+       button(type="button").purchase В корзину
+   input(type="text" style="display:none;" value=queryPage).pagination-queryPage
+   ul.pagination
+    - for (var i = 1; i < page + 1; i++)
+     li.pagination-item 
+      if queryCategory
+       a(href="?section=" + querySection + "&category=" + queryCategory + "&page=" + i)= i
+      else
+       a(href="?page=" + i)= i
+ include ../common/footer.pug
+ script(defer).
+  ! function(i) {
+   var o, n;
+   i(".title_block").on("click", function() {
+     o = i(this).parents(".accordion_item"), n = o.find(".info"),
+       o.hasClass("active_block") ? (o.removeClass("active_block"),
+         n.slideUp()) : (o.addClass("active_block"), n.stop(!0, !0).slideDown(),
+         o.siblings(".active_block").removeClass("active_block").children(
+           ".info").stop(!0, !0).slideUp())
+   })
+  }(jQuery);
+  if (localStorage.getItem('product')) {
+   var returnDataArray = JSON.parse(localStorage.getItem("product"));
+   var productItem = $("li.products-item");
+   for (var i = 0; i < returnDataArray.length; i++) {
+    for (var j = 0; j < productItem.length; j++) {
+     if (returnDataArray[i].id == productItem[j].id) {
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").empty();
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").text("Товар добавлен в корзину");
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").addClass("purchase-click");
+     }
+    }
+   }
+   $(".shop-icon-quantity").text(returnDataArray.length);
+  } else {
+   var dataArray = [];
+   var serialDataArray = JSON.stringify(dataArray);
+   localStorage.setItem('product', serialDataArray);
+  }
+  $('.purchase').click(function () {
+   var pressedIt = $(this);
+   var a = "Товар добавлен в корзину";
+   var b = "В корзину";
+   var id = $(pressedIt).parent().parent().attr("id");
+   var img = $(pressedIt).parent().parent().children(".product__top").children(".product-img").attr("src");
+   var title = $(pressedIt).parent().children("p.title").text();
+   var price = $(pressedIt).parent().children("div.price").children("span.price-active").text();
+   var spanData = $(pressedIt).parent().children("div.data").children("span.data").map(function(){
+    return $(this).text();
+   }).get();
+   var pData = $(pressedIt).parent().children("div.data").children("p.data-item").map(function(){
+    return $(this).text();
+   }).get();
+   var data = {
+    id: id,
+    img: img,
+    title: title,
+    spanData: spanData,
+    pData: pData,
+    price: price,
+    quantity: 0
+   };
+   var p = 0;
+   var shopIconQuantity = Number($(".shop-icon-quantity").text());
+   var returnDataArray = JSON.parse(localStorage.getItem("product"));
+   for (var i = 0; i < returnDataArray.length; i++) {
+    if (returnDataArray[i].id == data.id) {
+     p = 1;
+    }
+   }
+   $(pressedIt).toggleClass('purchase-click');
+   if ($(pressedIt).text() == a) {
+    $(pressedIt).empty();
+    $(pressedIt).text(b);
+    if (p == 1) {
+     for (var i = 0; i < returnDataArray.length; i++) {
+      if (returnDataArray[i].id == data.id) {
+       returnDataArray.splice(i, 1);
+      }
+     }
+     var serialDataArray = JSON.stringify(returnDataArray);
+     localStorage.setItem("product", serialDataArray);
+    }
+    shopIconQuantity -= 1;
+   } else {
+    $(pressedIt).empty();
+    $(pressedIt).text(a);
+    if (p != 1) {
+     var len = returnDataArray.length;
+     returnDataArray[len] = data;
+     var serialDataArray = JSON.stringify(returnDataArray);
+     localStorage.setItem("product", serialDataArray);
+    }
+    shopIconQuantity += 1;
+   }
+   $(".shop-icon-quantity").text(shopIconQuantity);
+  });
+  var queryPage = Number($("input.pagination-queryPage").val().replace(/\D+/g,""));
+  $("ul.pagination li.pagination-item").eq(queryPage - 1).find("a").addClass("pagination-active").removeAttr("href");

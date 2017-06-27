@@ -1,0 +1,26 @@
+{
+    "db": {
+        "host": "localhost",
+        "port": "27017",
+        "name": "portfolio",
+        "user": "",
+        "password": ""
+    },
+    "http": {
+        "port": 4000,
+        "host": "localhost",
+        "publicRoot": "public"
+    },
+    "mail": {
+        "subject": "Сообщение с сайта",
+        "smtp": {
+            "host": "smtp.gmail.com",
+            "port": 465,
+            "secure": true,
+            "auth": {
+                "user": "ttestov415@gmail.com",
+                "pass": "QWEasd123"
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+.full-screen
+ .full-screen__left
+ .full-screen__right
+ .full-screen__content
+  h1 
+   a(href="works") Наши работы
+  h1 
+   a(href="blog") Блог
+  h1 
+   a(href="about") О нас
+  h1 
+   a(href="/") Главная
+  h1 
+   a(href="shop") Магазин
+script.
+ $(document).ready(function(){
+    $(".arrow-down-link").on("click", function (event) {
+        event.preventDefault();
+        var id  = $(this).attr('href'),
+            top = $(id).offset().top;
+        $('body,html').animate({scrollTop: top}, 1000);
+    });
+ });
+.heder
+  .heder__bg
+   img(src="assets/img/heder.jpg" alt="bg")
+  a(href="#down").arrow-down-link
+   svg.arrow-down
+    use(xlink:href="#arrow_down")
+  button.cmn-toggle-switch.cmn-toggle-switch__htx.hamburger
+   span toggle menu
+  //svg.hamburger
+   //use(xlink:href="#hamburger")
+  .shop-icon
+   a(href="cart")
+    i.fa.fa-shopping-cart
+   .shop-icon-quantity(title="Очистить корзину ?") 0
+  .heder__social
+   a(href="https://vk.com/" target="_blank")
+    i.fa.fa-vk
+   a(href="https://github.com/" target="_blank")
+    i.fa.fa-github-alt
+   a(href="https://www.instagram.com/" target="_blank")
+    i.fa.fa-instagram
+  .heder__content
+   .avatar
+    img(src="assets/img/avatar.png" alt="avatar")
+   .heder__content-author #{author}
+   .heder__content-site #{site}
+  .link-sk(id="down" name="down")
+script(defer).
+ if (localStorage.getItem('product')) {
+  var returnDataArray = JSON.parse(localStorage.getItem("product"));
+  $(".shop-icon-quantity").text(returnDataArray.length);
+ } else {
+  var dataArray = [];
+  var serialDataArray = JSON.stringify(dataArray);
+  localStorage.setItem('product', serialDataArray);
+ }
+ $(".shop-icon-quantity").on("click", function () {
+  delete localStorage["product"];
+  var dataArray = [];
+  var serialDataArray = JSON.stringify(dataArray);
+  localStorage.setItem('product', serialDataArray);
+  $(".shop-icon-quantity").text("0");
+  if ($("li.products-item").length) {
+   var productItem = $("li.products-item");
+   for (var j = 0; j < productItem.length; j++) {
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").empty();
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").text("В корзину");
+      $(productItem[j]).children("div.product__bottom").children("button.purchase").removeClass("purchase-click");
+    }
+  };
+ });

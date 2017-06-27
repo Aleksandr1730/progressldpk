@@ -1,0 +1,125 @@
+extends ../_template
+block variables
+  - var title = 'Корзина'
+include ../common/mixins.pug
+block content
+ - var author = 'Корзина'
+ - var site = ''
+ include ../common/heder.pug
+ .cart
+  .detach(style="display: none;") Корзина пустая
+  form
+   table
+    thead
+     tr.caption
+      th(colspan="2") Название товара
+      th Цена
+      th Количество
+      th Итого
+      th
+    tbody
+      tr(id="1").data
+       td.img
+        img(width="150px" src="upload\\5936b76fe49d291764aa73ce_0.png")
+       td.title
+        p.title Штукатурка Юнис Теплон белый 15 кг
+        p.id Код товара: 10110 
+       td.price
+        span.price 265
+        span.currency  руб.
+       td.quantity
+        input(type="number" min="1" max="9999" value="1" autocomplete="off" required)
+       td.total
+        span.total 265
+        span.currency  руб.
+       td.delete
+        button(type="button").delete-button Удалить
+    tfoot
+     tr.control
+      td(colspan="2").totalControl 
+       span Итого: 
+       span.active 2732
+       span  руб.
+      td(colspan="2").clean
+       button(type="button").clean-button Очистить корзину
+      td(colspan="2").order
+       button(type="button").order-button Оформить заказ
+ include ../common/footer.pug
+ script(defer).
+  var returnDataArray = JSON.parse(localStorage.getItem("product"));
+  var data = $("tr.data");
+  for (var i = 1; i < returnDataArray.length; i++) $(data[0]).clone().appendTo("tbody");
+  var data = $("tr.data");
+  for (var i = 0; i < returnDataArray.length; i++) {
+   $(data[i]).attr("id", returnDataArray[i].id);
+   $(data[i]).find("td.img img").attr("src", returnDataArray[i].img);
+   $(data[i]).find("p.title").text(returnDataArray[i].title);
+   $(data[i]).find("p.id").text("Код товара: " + returnDataArray[i].id);
+   $(data[i]).find("td.price span.price").text(returnDataArray[i].price);
+  }
+  $("td.quantity input").keydown( function() {
+   var $this = $(this);
+   if($this.val().length > 4) $this.val($this.val().substr(0, 4));
+   if($this.val()[0] == "0") $this.val("1");
+  });
+  $("td.quantity input").blur( function() {
+   if($(this).val().length == 0 ) $(this).val("1");
+   if($(this).val()[0] == "0") $(this).val("1");
+  });
+  $("td.quantity input").keypress(function(e) {
+   if (!(e.which==8 || (e.which>47 && e.which<58))) return false;
+  });
+  $("td.quantity input").on('change keyup', function() {
+   if($(this).val().length != 0 && $(this).val()[0] != "0") {
+     var quantity = 0;
+     var price = 0;
+     var totalControl = 0;
+     quantity = Number($(this).val());
+     price = Number($(this).closest("tr.data").find("td.price span.price").text().replace(/\D+/g,""));
+     $(this).closest("tr.data").find("td.total span.total").text(quantity * price);
+     var totalPrice = $("tr.data td.total span.total").map(function(){
+      return Number($(this).text().replace(/\D+/g,""));
+     }).get();
+     for (var i = 0; i < totalPrice.length; i++) totalControl += totalPrice[i];
+     $("tr.control td.totalControl span.active").text(totalControl);
+     for (var i = 0; i < returnDataArray.length; i++) {
+      if ($(this).closest("tr.data").attr("id") == returnDataArray[i].id) returnDataArray[i].quantity = quantity;
+     }
+     var serialDataArray = JSON.stringify(returnDataArray);
+     localStorage.setItem("product", serialDataArray);
+   }
+  });
+  $("td.quantity input").val("1").change();
+  $("td.delete button.delete-button").click(function () {
+   for (var i = 0; i < returnDataArray.length; i++) {
+    if ($(this).closest("tr.data").attr("id") == returnDataArray[i].id) returnDataArray.splice(i, 1);
+   }
+   var serialDataArray = JSON.stringify(returnDataArray);
+   localStorage.setItem("product", serialDataArray);
+   $(this).closest("tr.data").detach();
+   $("td.quantity input").change();
+   var shopIconQuantity = Number($(".shop-icon-quantity").text());
+   shopIconQuantity -= 1;
+   $(".shop-icon-quantity").text(shopIconQuantity);
+   if (!returnDataArray.length) {
+    $(".cart form").detach();
+    $(".cart .detach").css("display", "block");
+   };
+  });
+  $("tr.control td.clean button.clean-button").click(function () {
+   var dataArray = [];
+   var serialDataArray = JSON.stringify(dataArray);
+   localStorage.setItem('product', serialDataArray);
+   $(".shop-icon-quantity").text("0");
+   $(".cart form").detach();
+   $(".cart .detach").css("display", "block");
+  });
+  if (!returnDataArray.length) {
+   $(".cart form").detach();
+   $(".cart .detach").css("display", "block");
+  };
+  $("tr.control td.order button.order-button").click(function () {
+   setTimeout(function(){
+    window.location.href = "ordering";
+   }, 300);
+  });

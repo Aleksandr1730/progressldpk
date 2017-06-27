@@ -1,0 +1,113 @@
+extends ../_template
+block variables
+  - var title = 'О нас'
+  - var maps = ""
+include ../common/mixins.pug
+block maps
+  script(src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript" defer)
+block content
+ - var author = 'О нас'
+ - var site = ''
+ include ../common/heder.pug
+ .about
+  .about__left
+   h1 Обо мне
+  .about__centre
+   .avatar
+    img(src="assets/img/avatar.png" alt="avatar")
+   h2 Кто мы
+   p. 
+    ООО "Прогресс" – юридическое лицо, которое выполняет функции розничной торговли. Компания выполняет следующие функции: розничная торговля, доставка лаков и красок на дом. 
+   p.
+    Компания ведет непосредственную работу с клиентами по вопросам торговли. Клиенты ООО "Прогресс" – физические лица, для которых предусмотрен широкий спектр лакокрасочной продукции. 
+  .about__right
+   h2 Чем мы можем быть вам полезены
+   p.
+    Администратор компании заключает договор на поставку продукции с заводом изготовителем. У фирмы есть склад, где созданы все условия хранения: контроль параметров температуры и влажности, чистота, освещенность. 
+   p.
+    Доставка продукции на дом осуществляется по заказу клиентов. Доставку осуществляет курьер. Документом, подтверждающим оплату, является товарный чек, в которой указывается номер квитанции, ФИО, сумма оплаты, дата оплаты. 
+   span.sp Сферы использования предлагаемых нами ЛКМ:
+   ul
+    li предприятия топливно-энергетического комплекса
+    li авиационная промышленность
+    li химическое и нефтяное машиностроение
+    li транспортное машиностроение
+    li коммунальное строительство
+    li дорожное и сельскохозяйственное машиностроение
+    li окраска и ремонт мостов
+    li обработка трубопроводов тепловых сетей
+    li военно-промышленный комплекс
+    li приборостроение
+   span Frontend
+   .circle-wrapper
+    .circle-wrap
+     span.circle__text HTML5
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text CSS3
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text JavaScript & jQuery
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+   span Backend
+   .circle-wrapper
+    .circle-wrap
+     span.circle__text PHP
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text mySQL
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text Node.js & npm
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text Mongo.db
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+   span WorkFlow
+   .circle-wrapper
+    .circle-wrap
+     span.circle__text Git
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text Gulp
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+    .circle-wrap
+     span.circle__text Bower
+     svg(width="120" height="120").circle
+      circle(transform="rotate(-90)" r="50" cx="-60" cy="60")
+      circle(transform="rotate(-90)" style="stroke-dasharray:250px 314px;" r="50" cx="-60" cy="60").cir
+ .about__bottom
+  .about__bottom-content
+   h2 Контакты
+   .about__bottom-contakt
+    i.fa.fa-skype
+    span skype_kdn
+   .about__bottom-contakt
+    i.fa.fa-envelope
+    span astahov@gmail.com
+   .about__bottom-contakt
+    i.fa.fa-phone
+    span +7 931 200 93 24
+   .about__bottom-contakt
+    i.fa.fa-map-marker
+    span г.Новосибирск, ул. Инская, д. 5
+  #map.map
+ include ../common/footer.pug

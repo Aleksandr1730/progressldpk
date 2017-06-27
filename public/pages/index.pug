@@ -1,0 +1,97 @@
+extends ../_template
+block variables
+  - var title = 'Главная'
+include ../common/mixins.pug
+block content
+  .welcome
+    .parallax
+     .parallax__layer
+      img(src="assets/img/parallax/layer-01.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-02.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-03.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-04.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-05.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-06.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-07.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-08.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-09.png")
+     .parallax__layer
+      img(src="assets/img/parallax/layer-10.png")
+    .logo 
+    .welcome__autho Авторизоваться
+    .welcome__main-login
+      .welcome__main-top.welcome__main-top-au
+        h2 Авторизуйтесь
+        form(name="authrization" action="#" method="post")
+         .welcome__main-top-login
+          .welcome__login 
+           i.fa.fa-user
+          .welcome__login-vod
+           input(name="login" id="loginn" class="auth" type="text" placeholder="Логин")
+         .welcome__main-bottom-pass
+          .welcome__pass 
+           i.fa.fa-key
+          .welcome__pass-vod
+           input(name="password" id="passwordd" class="auth" type="password" placeholder="Пароль")
+      .welcome__main-bottom.welcome__main-bottom-au
+        ul.welcome__main-list.welcome__main-list_mod
+          li 
+           a(href="#" class="welcome__main-link welcome__main-link-main") На главную
+          li 
+           button(type="button" id="saveButt" class="welcome__main-link") Войти
+    .welcome__main
+      .welcome__main-top
+        .avatar
+         img(src="" alt="")
+        .welcome__main-top-fio ООО "Прогресс"
+        .welcome__main-top-spec Розничная и оптовая торговля
+        .welcome__main-top-social
+      .welcome__main-bottom
+        ul.welcome__main-list
+          li 
+           a(href="works" class="welcome__main-link") Наши работы
+          li 
+           a(href="about" class="welcome__main-link") О нас
+          li 
+           a(href="blog" class="welcome__main-link") Блог
+          li 
+           a(href="shop" class="welcome__main-link") Магазин
+    .welcome__text.welcome__text_bottom
+      p © ООО "Прогресс" 2017 год
+           script.
+            saveButt.addEventListener('click', function() {
+             var data = {
+              login: loginn.value,
+              password: passwordd.value
+             };
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/auth/');
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf8');
+            xhr.send(JSON.stringify(data));
+            xhr.onreadystatechange = function() {
+             if (xhr.readyState != 4) return;
+             if (xhr.status != 200) {
+              alert( xhr.status + ': ' + xhr.statusText );
+             } else {
+              try {
+               var otv = JSON.parse(xhr.responseText);
+               } catch (e) {
+                alert( "Некорректный ответ " + e.message );
+               }
+               fotv(otv);
+             }
+            }
+             function fotv(otv) {
+              if (!otv.error) {
+               window.location.href='/admin';
+              }
+             };
+            });
